@@ -12,13 +12,8 @@ router.post("/check", async (req, res) => {
     });
   }
 
-  try {
-    const result = await checkRateLimit(clientId, limit, windowSeconds);
-    res.json(result);
-  } catch (err) {
-    // Fail-safe placeholder — we'll improve this in a later step
-    res.json({ allowed: true, remaining: -1, note: "fail-open (redis error)" });
-  }
+  const result = await checkRateLimit(clientId, limit, windowSeconds);
+  res.json(result);
 });
 
 export default router;
