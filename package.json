@@ -1,0 +1,30 @@
+{
+  "name": "rate-limiter-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"tests will go here\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/ioredis": "^4.28.10",
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "ioredis": "^5.11.1"
+  }
+}
