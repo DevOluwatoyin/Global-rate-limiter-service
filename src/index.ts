@@ -1,5 +1,6 @@
 import express from "express";
 import redis from "./config/redis";
+import { initDb } from "./config/postgres";
 import rateLimitRoutes from "./routes/rateLimit";
 
 const app = express();
@@ -18,6 +19,13 @@ app.get("/redis-check", async (req, res) => {
   res.json({ value });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+initDb()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to initialize database:", err);
+    process.exit(1);
+  });

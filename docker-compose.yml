@@ -9,16 +9,32 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=rluser
+      - POSTGRES_PASSWORD=rlpassword
+      - POSTGRES_DB=ratelimiter
     depends_on:
-      - redis
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_healthy
 
   app2:
     build: .
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=rluser
+      - POSTGRES_PASSWORD=rlpassword
+      - POSTGRES_DB=ratelimiter
     depends_on:
-      - redis
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_healthy
 
   nginx:
     image: nginx:alpine
@@ -29,3 +45,22 @@ services:
     depends_on:
       - app1
       - app2
+
+  postgres:
+      image: postgres:16-alpine
+      environment:
+        - POSTGRES_USER=rluser
+        - POSTGRES_PASSWORD=rlpassword
+        - POSTGRES_DB=ratelimiter
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U rluser -d ratelimiter"]
+        interval: 3s
+        timeout: 3s
+        retries: 5
+
+volumes:
+  pgdata:
